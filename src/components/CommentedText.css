@@ -1,0 +1,11 @@
+.comment {
+  background-color: #feeab5;
+}
+
+.comment.is-active {
+  background-color: #fcc935;
+}
+
+.comment.is-active ::selection {
+  background-color: #fcc935;
+}

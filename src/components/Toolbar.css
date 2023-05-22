@@ -1,0 +1,13 @@
+.toolbar {
+  border-bottom: 1px solid #ececec;
+  padding: 20px 0;
+  text-align: center;
+}
+
+.toolbar-btn {
+  margin: 0 8px;
+}
+
+.block-style-dropdown {
+  display: inline-block;
+}

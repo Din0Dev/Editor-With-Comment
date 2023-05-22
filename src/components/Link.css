@@ -1,0 +1,9 @@
+.link {
+  position: relative;
+  color: #ff8080;
+  text-decoration: line-through;
+}
+
+.link.edit-mode {
+  display: inline-block;
+}

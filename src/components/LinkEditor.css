@@ -1,0 +1,44 @@
+.link-editor {
+  display: none;
+  background: white;
+  position: absolute;
+  margin-top: 4px;
+  min-width: 300px;
+  z-index: 1;
+  max-width: 250px;
+
+}
+
+.link-editor-btn {
+  margin-top: 16px;
+}
+
+.link-editor-header {
+  display: flex;
+  justify-content: center;
+  min-height: 25px;
+  gap: 10px;
+}
+
+.link-editor-view {
+  display: flex;
+  justify-content: left;
+  text-align: left;
+  flex-wrap: wrap;
+  padding: 10px 0;
+}
+.link-editor-wrong-text {
+  word-break: break-word;
+  text-decoration: underline;
+  font-style: italic;
+  color: #ff8080;
+  text-decoration: line-through;
+}
+.link-editor-edited-text {
+  font-weight: bold;
+  word-break: break-word;
+
+}
+.link-editor-icon{
+  font-size: 30pxx;
+}
