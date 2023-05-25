@@ -88,7 +88,7 @@ export default function Editor({ document, onChange }) {
 
   useEffect(() => {
     setAllComments(...allComments, mockDataCommentFromApi);
-  }, [editor, allComments]);
+  }, [editor]);
 
   //! Send to API
   // Lấy tất cả ID từ local và filter mảng
@@ -107,7 +107,7 @@ export default function Editor({ document, onChange }) {
     ) {
       setSelectionForLink(previousSelection);
     }
-  }, [editor, selection, previousSelection]);
+  }, [editor, selection]);
   //! Render
   const editorOffsets =
     editorRef.current != null
