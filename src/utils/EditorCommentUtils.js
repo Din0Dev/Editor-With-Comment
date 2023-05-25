@@ -163,7 +163,6 @@ export async function initializeStateWithAllCommentThreads(
     match: (n) => Text.isText(n) && getCommentThreadsOnTextNode(n).size > 0,
   });
   const commentThreads = new Set();
-  
   let textNodeEntry = textNodesWithComments.next().value;
   while (textNodeEntry != null) {
     [...getCommentThreadsOnTextNode(textNodeEntry[0])].forEach((threadID) => {
@@ -177,16 +176,17 @@ export async function initializeStateWithAllCommentThreads(
   Array.from(commentThreads).forEach((id) => {
     if (!isEmpty(dataComment)) {
       const data = dataComment.find((idData) => idData.id === id);
-      const { text, author, creationTime } = data?.comments[0];
+      const renderComments =
+        data &&
+        (data?.comments).map((items) => ({
+          id: items.id,
+          author: items.author,
+          text: items.text,
+          creationTime: new Date(items.creationTime),
+        }));
       const status = data.status;
       setCommentThreadData(id, {
-        comments: [
-          {
-            author: author,
-            text: text,
-            creationTime: new Date(creationTime),
-          },
-        ],
+        comments: renderComments,
         status: status,
       });
     }
@@ -194,13 +194,13 @@ export async function initializeStateWithAllCommentThreads(
   });
 }
 
-// Local: find ALL ID with document 
+// Local: find ALL ID with document
 export function findAllIDWithCommentThread(document) {
   const fields = [];
   const findFieldsWithCommentThread = (node) => {
     if (Array.isArray(node)) {
       node.forEach((item) => findFieldsWithCommentThread(item));
-    } else if (typeof node === 'object' && node !== null) {
+    } else if (typeof node === "object" && node !== null) {
       for (let key in node) {
         if (key.includes(COMMENT_THREAD_PREFIX)) {
           fields.push(key);
@@ -210,8 +210,8 @@ export function findAllIDWithCommentThread(document) {
       }
     }
   };
-  document.forEach((node) => findFieldsWithCommentThread(node))
+  document.forEach((node) => findFieldsWithCommentThread(node));
   // Filter Comment_Thread
-  const result = fields.map(field => field.replace("commentThread_", ""));
-  return result
+  const result = fields.map((field) => field.replace("commentThread_", ""));
+  return result;
 }

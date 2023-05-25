@@ -12,6 +12,17 @@
   max-height: 50vh;
   overflow-y: auto;
 }
+.comment-list::-webkit-scrollbar {
+  width: 5px;
+}
+
+.comment-list::-webkit-scrollbar-track {
+  -webkit-box-shadow: inset 0 0 6px #ffffff; 
+}
+
+.comment-list::-webkit-scrollbar-thumb {
+  background-color: #6e6e6e 
+}
 
 .comment-row {
   display: flex;

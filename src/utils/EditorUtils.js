@@ -59,21 +59,21 @@ export function identifyLinksInTextIfAny(editor) {
   if (editor.selection == null || !Range.isCollapsed(editor.selection)) {
     return;
   }
-
+  
   const [node] = Editor.parent(editor, editor.selection);
   // if we are already inside a link, exit early.
   if (node.type === "link") {
     return;
   }
-
+  
   const [currentNode, currentNodePath] = Editor.node(editor, editor.selection);
   if (!Text.isText(currentNode)) {
     return;
   }
-
+  
   let [start] = Range.edges(editor.selection);
   const cursorPoint = start;
-
+  
   const startPointOfLastCharacter = Editor.before(editor, editor.selection, {
     unit: "character",
   });
@@ -81,12 +81,12 @@ export function identifyLinksInTextIfAny(editor) {
     editor,
     Editor.range(editor, startPointOfLastCharacter, cursorPoint)
     );
-
-  if (lastCharacter !== " ") {
-    return;
-  }
-
-  let end = startPointOfLastCharacter;
+    
+    if (lastCharacter !== " ") {
+      return;
+    }
+    
+    let end = startPointOfLastCharacter;
   start = Editor.before(editor, end, {
     unit: "character",
   });

@@ -1,0 +1,52 @@
+.comment-row{
+  position: relative;
+}
+.comment-row:hover>.comment-tooltip{
+  display: block;
+}
+
+.comment-tooltip {
+  display: none;
+  position: absolute;
+  top: 4px;
+  right: 0;
+  height: 100%;
+  cursor: pointer;
+  font-size: 20px;
+}
+
+.is-active-tooltip{
+  display: block !important;
+}
+.comment-popover{
+  position: absolute;
+  top: 12px;
+  right: 20px;
+  transition: all 0.5s ease-out;
+  border-radius: 5px;
+}
+.comment-popover-inner{
+  display: flex;
+  flex-direction: column;
+}
+.action-button{
+  background-color: transparent;
+  border: none;
+  color: black;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+.action-button:hover{
+  background-color: #cecccc;
+  color: black;
+}
+.action-button i {
+  margin-right: 12px;
+  width: 24px;
+  height: 24px;
+}
+.action-button span {
+  margin-right: 16px;
+  font-size: 1rem;
+}

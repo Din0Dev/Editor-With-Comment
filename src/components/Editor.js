@@ -44,7 +44,9 @@ export default function Editor({ document, onChange }) {
   const [isOpenSideBar] = useContext(CommentSidebarContext);
   const [allComments, setAllComments] = useContext(AllCommentContext);
   const [allIDs, setAllIds] = useContext(IDsLocalContext);
-  const [selectionForLink, setSelectionForLink] = useContext(SelectionForLinkContext);
+  const [selectionForLink, setSelectionForLink] = useContext(
+    SelectionForLinkContext
+  );
 
   const editorRef = useRef(null);
   const editor = useMemo(() => withHistory(withReact(createEditor())), []);
@@ -65,9 +67,9 @@ export default function Editor({ document, onChange }) {
     (doc) => {
       onChange(doc);
       setSelection(editor.selection);
-      identifyLinksInTextIfAny(editor);
+      // identifyLinksInTextIfAny(editor);
     },
-    [onChange, setSelection, editor, allComments]
+    [onChange, setSelection, editor]
   );
 
   //! Function
@@ -80,16 +82,20 @@ export default function Editor({ document, onChange }) {
   }, [editor, addCommentThread]);
 
   //! Call API
-
   useEffect(() => {
     setAllIds(findAllIDWithCommentThread(document));
   }, [document]);
+
   useEffect(() => {
     setAllComments(...allComments, mockDataCommentFromApi);
-  }, [editor]);
+  }, [editor, allComments]);
 
   //! Send to API
-  console.log("Send:", document, allComments);
+  // Lấy tất cả ID từ local và filter mảng
+  const commentToSendAPI =
+    allComments &&
+    allComments?.filter((item) => allIDs.map((item) => item).includes(item.id));
+  console.log("Send:", document, commentToSendAPI);
 
   //! Effect
   useEffect(() => {
@@ -101,7 +107,7 @@ export default function Editor({ document, onChange }) {
     ) {
       setSelectionForLink(previousSelection);
     }
-  }, [editor, selection]);
+  }, [editor, selection, previousSelection]);
   //! Render
   const editorOffsets =
     editorRef.current != null

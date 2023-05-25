@@ -26,11 +26,11 @@ export default function LinkEditor({
 
   //! Function
   const selectNode = () => {
-    const {anchor, focus} = selectionForLink;
+    const { anchor, focus } = selectionForLink;
     Transforms.select(editor, {
       anchor: anchor,
-      focus: focus
-    })
+      focus: focus,
+    });
     return;
   };
   const onLinkURLChange = useCallback(
@@ -47,10 +47,10 @@ export default function LinkEditor({
   );
 
   const onDelete = useCallback(() => {
-     Transforms.unwrapNodes(editor, {
+    Transforms.unwrapNodes(editor, {
       match: (n) => Element.isElement(n) && n.type === "link",
     });
-  },[selectionForLink])
+  }, [editor. selectionForLink]);
 
   const onClickOutside = () => {
     setSelectionForLink(null);
@@ -67,7 +67,12 @@ export default function LinkEditor({
       editorOffsets={editorOffsets}
       node={node}
       className={"link-editor"}
-      header={<Header onToggleEdit={() => setHasEdit(!hasEdit)} onToggleDelete={onDelete} />}
+      header={
+        <Header
+          onToggleEdit={() => setHasEdit(!hasEdit)}
+          onToggleDelete={onDelete}
+        />
+      }
       onClickOutside={onClickOutside}
     >
       {linkURL && (
@@ -99,7 +104,7 @@ export default function LinkEditor({
     </NodePopover>
   );
 
-  function Header({ onToggleEdit,onToggleDelete }) {
+  function Header({ onToggleEdit, onToggleDelete }) {
     return (
       <div className={"link-editor-header"}>
         {hasEdit ? (

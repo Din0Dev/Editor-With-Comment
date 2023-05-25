@@ -8,12 +8,7 @@ import { useRecoilCallback } from "recoil";
 export default function useRemoveCommentThreadCallback(threadID) {
   return useRecoilCallback(
     ({ set }) =>
-      (id) => {
-        set(commentThreadIDsState, (ids) => {
-          const idsArr = Array.from(ids);
-          const filter = idsArr.filter((item) => item !== threadID);
-          return new Set(filter);
-        });
+      (id, threadData) => {
         set(commentThreadsState(threadID), null);
       },
     []

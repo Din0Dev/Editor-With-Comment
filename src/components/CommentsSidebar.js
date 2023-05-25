@@ -1,6 +1,6 @@
 import "./CommentSidebar.css";
 
-import { useCallback, useContext } from "react";
+import { useCallback, useContext, useState } from "react";
 import classNames from "classnames";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { Editor, Path, Text, Transforms } from "slate";
@@ -9,6 +9,7 @@ import { useEditor } from "slate-react";
 import Card from "react-bootstrap/Card";
 import Col from "react-bootstrap/Col";
 import Row from "react-bootstrap/Row";
+import { Button } from "react-bootstrap";
 
 import CommentRow from "./CommentRow";
 import {
@@ -16,14 +17,11 @@ import {
   commentThreadIDsState,
   commentThreadsState,
 } from "../utils/CommentState";
-import {
-  getCommentThreadsOnTextNode,
-} from "../utils/EditorCommentUtils";
+import { getCommentThreadsOnTextNode } from "../utils/EditorCommentUtils";
 import IDsLocalContext from "../context/IDsLocalProvider";
 
 export default function CommentsSidebar() {
   const allCommentThreadIDs = useRecoilValue(commentThreadIDsState);
-
   //! Render
   return (
     <Card className={"comments-sidebar"}>
@@ -45,7 +43,8 @@ export default function CommentsSidebar() {
 function CommentThread({ id }) {
   const editor = useEditor();
 
-  const [allIDs] = useContext(IDsLocalContext)
+  const [shouldShowReplies, setShouldShowReplies] = useState(false);
+  const [allIDs] = useContext(IDsLocalContext);
 
   const [activeCommentThreadID, setActiveCommentThreadID] = useRecoilState(
     activeCommentThreadIDAtom
@@ -53,6 +52,10 @@ function CommentThread({ id }) {
   const { comments, status } = useRecoilValue(commentThreadsState(id));
 
   //! Function
+  const onBtnClick = useCallback(() => {
+    setShouldShowReplies(!shouldShowReplies);
+  }, [shouldShowReplies, setShouldShowReplies]);
+
   const onClick = useCallback(() => {
     const textNodesWithThread = Editor.nodes(editor, {
       at: [],
@@ -80,16 +83,14 @@ function CommentThread({ id }) {
     setActiveCommentThreadID(id);
   }, [editor, id, setActiveCommentThreadID]);
 
-  
-  
   //! Render
-  const [firstComment] = comments;
+  const [firstComment, ...otherComments] = comments;
   const isHaveCommentInData = allIDs.includes(id);
-  
+
   if (comments.length === 0) {
     return null;
   }
-  
+
   return (
     isHaveCommentInData && (
       <Card
@@ -101,7 +102,22 @@ function CommentThread({ id }) {
         })}
         onClick={onClick}
       >
-        <CommentRow comment={firstComment} showConnector={false} />
+        <CommentRow isShowSideBar={true} comment={firstComment} showConnector={false} />
+        {shouldShowReplies
+          ? otherComments.map((comment, index) => (
+              <CommentRow isShowSideBar={true} key={index} comment={comment} showConnector={false} />
+            ))
+          : null}
+        {comments.length > 1 ? (
+          <Button
+            className={"show-replies-btn"}
+            size="sm"
+            variant="outline-primary"
+            onClick={onBtnClick}
+          >
+            {shouldShowReplies ? "Hide Replies" : "Show Replies"}
+          </Button>
+        ) : null}
       </Card>
     )
   );
