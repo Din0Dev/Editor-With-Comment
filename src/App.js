@@ -11,29 +11,26 @@ import { CommentSideBarProvider } from "./context/CommentSideBarProvider";
 import { AllCommentProvider } from "./context/AllCommentProvider";
 import { IDsLocalProvider } from "./context/IDsLocalProvider";
 import { ExampleDocument } from "./utils/ExampleDocument";
-import { SelectionForLinkProvider } from "./context/SelectionForLinkProvider";
 
 function App() {
   const [document, updateDocument] = useState(ExampleDocument);
 
   return (
-    <SelectionForLinkProvider>
-      <IDsLocalProvider>
-        <AllCommentProvider>
-          <CommentSideBarProvider>
-            <Navbar bg="dark" variant="dark">
-              <Navbar.Brand href="#">Izone Editor</Navbar.Brand>
-            </Navbar>
-            <div className="App">
-              <RecoilRoot>
-                <Editor document={document} onChange={updateDocument} />
-                <DebugObserver />
-              </RecoilRoot>
-            </div>
-          </CommentSideBarProvider>
-        </AllCommentProvider>
-      </IDsLocalProvider>
-    </SelectionForLinkProvider>
+    <IDsLocalProvider>
+      <AllCommentProvider>
+        <CommentSideBarProvider>
+          <Navbar bg="dark" variant="dark">
+            <Navbar.Brand href="#">Izone Editor</Navbar.Brand>
+          </Navbar>
+          <div className="App">
+            <RecoilRoot>
+              <Editor document={document} onChange={updateDocument} />
+              <DebugObserver />
+            </RecoilRoot>
+          </div>
+        </CommentSideBarProvider>
+      </AllCommentProvider>
+    </IDsLocalProvider>
   );
 }
 

@@ -6,6 +6,7 @@ import React, {
   useCallback,
   useMemo,
   useRef,
+  useState,
 } from "react";
 import { Editable, Slate, withReact } from "slate-react";
 import { withHistory } from "slate-history";
@@ -38,15 +39,12 @@ import CommentSidebarContext from "../context/CommentSideBarProvider";
 import AllCommentContext from "../context/AllCommentProvider";
 import IDsLocalContext from "../context/IDsLocalProvider";
 import { mockDataCommentFromApi } from "../utils/ExampleDocument";
-import SelectionForLinkContext from "../context/SelectionForLinkProvider";
 
 export default function Editor({ document, onChange }) {
   const [isOpenSideBar] = useContext(CommentSidebarContext);
   const [allComments, setAllComments] = useContext(AllCommentContext);
   const [allIDs, setAllIds] = useContext(IDsLocalContext);
-  const [selectionForLink, setSelectionForLink] = useContext(
-    SelectionForLinkContext
-  );
+  const [isOpenEditText, setIsOpenEditText] = useState(false);
 
   const editorRef = useRef(null);
   const editor = useMemo(() => withHistory(withReact(createEditor())), []);
@@ -55,6 +53,24 @@ export default function Editor({ document, onChange }) {
   const [previousSelection, selection, setSelection] = useSelection(editor);
   const activeCommentThreadID = useRecoilValue(activeCommentThreadIDAtom);
   const addCommentThread = useAddCommentThreadCallback();
+
+  let selectionForLink = null;
+  if (isLinkNodeAtSelection(editor, selection)) {
+    selectionForLink = selection;
+  } else if (
+    selection == null &&
+    isLinkNodeAtSelection(editor, previousSelection)
+  ) {
+    selectionForLink = previousSelection;
+  }
+
+  const editorOffsets =
+    editorRef.current != null
+      ? {
+          x: editorRef.current.getBoundingClientRect().x,
+          y: editorRef.current.getBoundingClientRect().y,
+        }
+      : null;
 
   //! Function
   const onKeyDown = useCallback(
@@ -73,13 +89,6 @@ export default function Editor({ document, onChange }) {
   );
 
   //! Function
-  useEffect(() => {
-    initializeStateWithAllCommentThreads(
-      editor,
-      addCommentThread,
-      mockDataCommentFromApi
-    );
-  }, [editor, addCommentThread]);
 
   //! Call API
   useEffect(() => {
@@ -99,24 +108,20 @@ export default function Editor({ document, onChange }) {
 
   //! Effect
   useEffect(() => {
-    if (isLinkNodeAtSelection(editor, selection)) {
-      setSelectionForLink(selection);
-    } else if (
-      selection == null &&
-      isLinkNodeAtSelection(editor, previousSelection)
-    ) {
-      setSelectionForLink(previousSelection);
-    }
-  }, [editor, selection]);
-  //! Render
-  const editorOffsets =
-    editorRef.current != null
-      ? {
-          x: editorRef.current.getBoundingClientRect().x,
-          y: editorRef.current.getBoundingClientRect().y,
-        }
-      : null;
+    initializeStateWithAllCommentThreads(
+      editor,
+      addCommentThread,
+      mockDataCommentFromApi
+    );
+  }, [editor, addCommentThread]);
 
+  useEffect(() => {
+    if (selectionForLink != null) {
+      setIsOpenEditText(true);
+    }
+  }, [selectionForLink]);
+
+  //! Render
   return (
     <Slate editor={editor} value={document} onChange={onChangeLocal}>
       <div className={"editor-wrapper"} fluid={"true"}>
@@ -132,11 +137,11 @@ export default function Editor({ document, onChange }) {
           <Row>
             <Col>
               <div className="editor" ref={editorRef}>
-                {selectionForLink != null ? (
+                {selectionForLink != null && isOpenEditText ? (
                   <LinkEditor
                     editorOffsets={editorOffsets}
                     selectionForLink={selectionForLink}
-                    setSelectionForLink={setSelectionForLink}
+                    setIsOpenEditText={setIsOpenEditText}
                   />
                 ) : null}
                 {activeCommentThreadID != null ? (

@@ -1,8 +1,9 @@
 import "./LinkEditor.css";
 
-import { useCallback, useContext, useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Editor, Element, Transforms } from "slate";
 import { useEditor } from "slate-react";
+import { isEmpty } from "lodash";
 
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
@@ -13,7 +14,7 @@ import { getFirstTextNodeAtSelection } from "../utils/EditorUtils";
 export default function LinkEditor({
   editorOffsets,
   selectionForLink,
-  setSelectionForLink,
+  setIsOpenEditText,
 }) {
   const editor = useEditor();
   const textNode = getFirstTextNodeAtSelection(editor, selectionForLink);
@@ -25,14 +26,6 @@ export default function LinkEditor({
   const [hasEdit, setHasEdit] = useState(!linkURL);
 
   //! Function
-  const selectNode = () => {
-    const { anchor, focus } = selectionForLink;
-    Transforms.select(editor, {
-      anchor: anchor,
-      focus: focus,
-    });
-    return;
-  };
   const onLinkURLChange = useCallback(
     (event) => setLinkURL(event.target.value),
     [setLinkURL]
@@ -41,19 +34,21 @@ export default function LinkEditor({
   const onApply = useCallback(
     (event) => {
       Transforms.setNodes(editor, { url: linkURL }, { at: path });
-      setSelectionForLink(null);
+      setIsOpenEditText(false)
     },
     [editor, linkURL, path]
   );
 
-  const onDelete = useCallback(() => {
+  const onDelete = () => {
     Transforms.unwrapNodes(editor, {
       match: (n) => Element.isElement(n) && n.type === "link",
     });
-  }, [editor. selectionForLink]);
+  };
 
   const onClickOutside = () => {
-    setSelectionForLink(null);
+    if (isEmpty(node.url)) {
+      onDelete();
+    }
   };
 
   //! Effect

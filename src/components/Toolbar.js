@@ -10,7 +10,6 @@ import { activeCommentThreadIDAtom } from "../utils/CommentState";
 import {
   getActiveStyles,
   hasActiveLinkAtSelection,
-  isLinkNodeAtSelection,
   toggleLinkAtSelection,
   toggleStyle,
 } from "../utils/EditorUtils";
@@ -21,16 +20,12 @@ import {
 
 import useAddCommentThreadCallback from "../hooks/useAddCommentThreadCallback";
 import CommentSidebarContext from "../context/CommentSideBarProvider";
-import SelectionForLinkContext from "../context/SelectionForLinkProvider";
 
 const CHARACTER_STYLES = ["bold", "italic", "underline"];
 
 export default function Toolbar({ selection, previousSelection }) {
   const editor = useEditor();
   const [isOpenSideBar, setIsOpenSideBar] = useContext(CommentSidebarContext);
-  const [selectionForLink, setSelectionForLink] = useContext(
-    SelectionForLinkContext
-  );
   const setActiveCommentThreadID = useSetRecoilState(activeCommentThreadIDAtom);
   const addCommentThread = useAddCommentThreadCallback();
 
