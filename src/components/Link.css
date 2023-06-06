@@ -1,9 +1,41 @@
-.link {
+.link-container {
+  position: relative;
+}
+
+.link-text-error {
   position: relative;
   color: #ff8080;
   text-decoration: line-through;
 }
 
-.link.edit-mode {
-  display: inline-block;
+.link-text-fixed{
+  max-width: 250px;
+  
+  position: absolute;
+  top: 1.5rem;
+  left: 0;
+
+  background: #ffffff;
+  color: #00a653;
+  outline: none;
+  white-space: pre-wrap;
+  overflow-wrap: break-word;
+  
+  border: 1px solid rgba(0,0,0,.125);
+  padding: .5rem 1rem;
+  border-radius: .25rem;
+  -webkit-user-select: none; /* Safari */
+  -ms-user-select: none; /* IE 10 and IE 11 */
+  user-select: none;   
+  pointer-events: none;
+}
+
+.link-is-hover{
+  max-width: 250px;
+  display: none;
+}
+
+.link-text-error:hover + .link-is-hover{
+  display: flex !important;
+  flex-direction: row;
 }

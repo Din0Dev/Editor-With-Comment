@@ -77,7 +77,41 @@ export const ExampleDocument = [
         bold: true,
       },
       {
-        text: " is simply dummy text of the ",
+        text: " is simply ",
+      },
+      {
+        type: "link",
+        url: "123123",
+        children: [
+          {
+            text: "dummy ",
+          },
+        ],
+        articleData: {
+          id: 1,
+          title: "Mạo từ",
+          url: "google.com",
+          children: [
+            {
+              id: 1,
+              url: "google.com",
+              title: "the",
+            },
+            {
+              id: 2,
+              url: "google.com",
+              title: "another",
+            },
+            {
+              id: 3,
+              url: "google.com",
+              title: "another",
+            },
+          ],
+        },
+      },
+      {
+        text: "text of the ",
       },
       {
         text: "printing ",
